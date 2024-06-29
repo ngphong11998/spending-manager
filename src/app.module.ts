@@ -6,50 +6,40 @@ import { MODEL_NAME } from './commons/constants/database.constant';
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
+        ConfigModule.forRoot({
+            isGlobal: true
+        }),
+        // MongooseModule.forRoot('mongodb://localhost:27017/spending_manager'),
         MongooseModule.forRootAsync({
             imports: [ConfigModule],
-            useFactory: async (configService: ConfigService) => {
-                console.log(`configService.get<string>('MONGO_URI'): `, configService.get<string>('MONGO_URI'))
-                return {
-                    //mongo//configService.get<string>('MONGO_URI'),
-                    uri: 'mongodb://127.0.0.1:27017/spending_manager',
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true,
-                    useCreateIndex: true,
-                    useFindAndModify: false,
-                    poolSize: 10,
-                    // replicaSet: db.replicaSet || null,
-                    connectionFactory: (connection: any, connectionName) => {
-                        console.log(`-----herreeeeeeee`)
-                        connection.on("connecting", () => {
-                            console.log("mongo is connecting");
-                        });
-                        connection.on("connected", () => {
-                            console.log("mongo connected success");
-                        });
-                        connection.on("disconnected", () => {
-                            console.log(
-                                `mongo disconnected
-                                ${connection.readyState}`
-                            );
-                        });
-
-                        connection.on("error", error => {
-                            if (
-                                error.message.includes(
-                                    "Server selection timed out"
-                                )
-                            ) {
-                                connection._events.disconnected();
-                                connection._events.connected();
-                            }
-                        });
-                        return connection;
-                    }
-                }
-            },
-            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) => ({
+                uri: configService.get<string>('MONGO_URI'),
+                // connectionFactory(connection, name) {
+                //     const uriDB = configService.get<string>('MONGO_URI')
+                //     connection.on("connecting", () => {
+                //         console.log(`Connect database '${uriDB}' is processing`)
+                //     })
+                //     connection.on("connected", () => {
+                //         console.log(`Connect database '${uriDB}' successfully`)
+                //     })
+                //     connection.on("disconnected", () => {
+                //         console.log(`Disconnected database '${uriDB}' ${connection.readyState}`)
+                //     })
+                //     connection.on("error", error => {
+                //         console.log(`Error when connect database: ${error.message || JSON.stringify(error)}}`)
+                //         if (
+                //             error.message.includes(
+                //                 "Server selection timed out"
+                //             )
+                //         ) {
+                //             connection._events.disconnected();
+                //             connection._events.connected();
+                //         }
+                //         return connection;
+                //     })
+                // },
+            }),
+            inject: [ConfigService]
         }),
         MongooseModule.forFeatureAsync(
             mapSchemasWithModelName(Object.values(MODEL_NAME))
