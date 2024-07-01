@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import configuration from 'src/commons/configs/app.config'
 import { mapSchemasWithModelName } from './shares/schemas';
 import { MODEL_NAME } from './commons/constants/database.constant';
 
 @Module({
     imports: [
         ConfigModule.forRoot({
+            load: [configuration],
             isGlobal: true
         }),
         // MongooseModule.forRoot('mongodb://localhost:27017/spending_manager'),
