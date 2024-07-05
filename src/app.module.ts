@@ -6,7 +6,7 @@ import { mapSchemasWithModelName } from './shares/schemas';
 import { MODEL_NAME } from './commons/constants/database.constant';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { GroupUserModule } from './modules/group-user/group-user.module';
+import { GroupUserModule } from './modules/groupUser/group-user.module';
 import { TransactionModule } from './modules/transaction/transaction.module';
 import { JwtAuthGuard } from './cores/guards';
 

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { IGroupUser } from "src/modules/groupUser/entities/group-user.entity";
 
-const GroupUserSchema = new mongoose.Schema(
+const GroupUserSchema = new mongoose.Schema<IGroupUser>(
     {
         code: { type: String, unique: true, require: true },
         name: { type: String },

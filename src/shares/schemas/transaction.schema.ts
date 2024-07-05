@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
+import { TRANSACTION_TYPE } from "src/commons/constants";
+import { ITransaction } from "src/modules/transaction/entities/transaction.entity";
 
-const TransactionSchema = new mongoose.Schema(
+const TransactionSchema = new mongoose.Schema<ITransaction>(
     {
         code: { type: String, unique: true, require: true },
-        type: { type: String, enum: ['IN', 'OUT'], default: 'OUT' },
+        type: { type: String, enum: TRANSACTION_TYPE, default: TRANSACTION_TYPE.OUT },
         group_user_code: { type: String, require: true, alias: 'groupUserCode' },
+        amount: { type: Number },
         description: { type: String },
         time_using: { type: Number, alias: 'timeUsing' },
         created_by: { type: String, alias: 'createdBy' },

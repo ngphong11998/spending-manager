@@ -6,6 +6,7 @@ import { ACTIVE_STATUS, MODEL_NAME } from 'src/commons/constants';
 import { IUser } from '../user/entities/user.entity';
 import { LoginDto, ResponseLoginDto } from './dtos/login.dto';
 import { comparePassword} from 'src/shares/utils';
+import { IReqUser } from 'src/shares/interfaces';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +25,7 @@ export class AuthService {
         if (!comparePassword(password, user.password)) {
             throw new Error('Password incorrect')
         }
-        const dataPayload = {
+        const dataPayload: IReqUser = {
             userId: user._id,
             email: user.email
         }

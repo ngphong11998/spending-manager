@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { IGroupUserMapping } from "src/modules/groupUserMapping/entities/group-user-mapping.entity";
 
-export const GroupUserMappingSchema = new mongoose.Schema(
+export const GroupUserMappingSchema = new mongoose.Schema <IGroupUserMapping>(
     {
         group_code: { type: String, require: true, alias: 'groupCode' },
         user_code: { type: String, require: true, alias: 'userCode' },

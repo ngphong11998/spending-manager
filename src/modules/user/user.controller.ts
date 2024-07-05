@@ -10,9 +10,9 @@ export class UserController {
     constructor(private readonly userService: UserService) { }
 
     @Post('create')
-    async create(@Req() req: Request, @Res() res: Response, @Body() body: CreateUserDto) {
+    async create(@Req() req: any, @Res() res: Response, @Body() body: CreateUserDto) {
         try {
-            const data = await this.userService.create(body)
+            const data = await this.userService.create(body, req.user)
             return successResponse(res, data)
         } catch (err) {
             return errorResponse(res, err)
@@ -21,14 +21,14 @@ export class UserController {
     }
 
     @Get('list')
-    async find(@Req() req: Request, @Query() query: any) {
+    async find(@Req() req: any, @Query() query: any) {
         return await this.userService.find(query);
     }
 
     @Get('detail/:id')
-    async findOne(@Req() req: Request, @Res() res: Response, @Param('id') id: string) {
+    async findOne(@Req() req: any, @Res() res: Response, @Param('id') id: string) {
         try {
-            const data = await this.userService.findOne(id);
+            const data = await this.userService.findOne(id, req.user);
             return successResponse(res, data)
         } catch (err) {
             return errorResponse(res, err)
@@ -37,7 +37,7 @@ export class UserController {
     }
 
     @Put('update/:id')
-    async update(@Req() req: Request, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-        return await this.userService.update(id, updateUserDto);
+    async update(@Req() req: any, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+        return await this.userService.update(id, updateUserDto, req.user);
     }
 }

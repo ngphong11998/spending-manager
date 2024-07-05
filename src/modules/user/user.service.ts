@@ -6,15 +6,17 @@ import { MODEL_NAME } from 'src/commons/constants/database.constant';
 import { Model } from 'mongoose';
 import { IUser } from './entities/user.entity';
 import { encryptString } from 'src/shares/utils';
+import { IReqUser } from 'src/shares/interfaces';
+import { EntityNotFound } from 'src/shares/exceptions';
 
 @Injectable()
 export class UserService {
     constructor(@InjectModel(MODEL_NAME.USER) private userModel: Model<IUser>) { }
 
-    async create(createUserDto: CreateUserDto) {
+    async create(createUserDto: CreateUserDto, reqUser: IReqUser) {
         const newUser = new this.userModel({
             ...createUserDto,
-            createdBy: '' //TODO: update thêm user vào
+            created_by: reqUser.userId
         })
         newUser.password = encryptString(newUser.password)
         return await newUser.save()
@@ -24,18 +26,23 @@ export class UserService {
         return await this.userModel.find(query);
     }
 
-    async findOne(id: string) {
-        return await this.userModel.findOne({ _id: id });
+    async findOne(id: string, reqUser: IReqUser) {
+        const user = await this.userModel.findById(id);
+        if(!user){
+            throw new EntityNotFound('User')
+        }
+        return user;
     }
 
-    async update(id: string, updateData: UpdateUserDto) {
-        const user = await this.userModel.findOne({ _id: id })
+    async update(id: string, updateData: UpdateUserDto, reqUser: IReqUser) {
+        const user = await this.userModel.findById(id)
         if (!user) {
-            throw new Error('User not found')//TODO: update sau
+            throw new EntityNotFound('User')
         }
         for (const key in updateData) {
             user[key] = updateData[key]
         }
+        user.updated_by = reqUser.userId
         return await user.save();
     }
 }

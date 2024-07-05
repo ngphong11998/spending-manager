@@ -1,34 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, Query, Put } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { errorResponse, successResponse } from 'src/shares/utils';
+import { Response } from 'express';
 
 @Controller('transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
-  @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionService.create(createTransactionDto);
-  }
+    @Post('create')
+    async create(@Req() req: any, @Res() res: Response, @Body() body: CreateTransactionDto) {
+        try {
+            const data = await this.transactionService.create(body, req.user)
+            return successResponse(res, data)
+        } catch (err) {
+            return errorResponse(res, err)
+        }
 
-  @Get()
-  findAll() {
-    return this.transactionService.findAll();
-  }
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.transactionService.findOne(+id);
-  }
+    @Get('list')
+    async find(@Req() req: any, @Query() query: any) {
+        return await this.transactionService.find(query);
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTransactionDto: UpdateTransactionDto) {
-    return this.transactionService.update(+id, updateTransactionDto);
-  }
+    @Get('detail/:id')
+    async findOne(@Req() req: any, @Res() res: Response, @Param('id') id: string) {
+        try {
+            const data = await this.transactionService.findOne(id, req.user);
+            return successResponse(res, data)
+        } catch (err) {
+            return errorResponse(res, err)
+        }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.transactionService.remove(+id);
-  }
+    }
+
+    @Put('update/:id')
+    async update(@Req() req: any, @Param('id') id: string, @Body() updateUserDto: UpdateTransactionDto) {
+        return await this.transactionService.update(id, updateUserDto, req.user);
+    }
 }

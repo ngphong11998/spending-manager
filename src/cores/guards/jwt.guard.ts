@@ -10,6 +10,7 @@ import config from 'src/commons/configs/app.config'
 import { ACTIVE_STATUS, IS_PUBLIC_KEY_PERMISSION } from 'src/commons/constants';
 import { Logger } from '@nestjs/common';
 import { UnauthenticatedResponse } from 'src/shares/utils';
+import { IReqUser } from 'src/shares/interfaces';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -33,7 +34,7 @@ export class JwtAuthGuard implements CanActivate {
                 throw 'TOKEN not found';
             }
             try {
-                const userPayload = await this.jwtService.verifyAsync(
+                const userPayload: IReqUser = await this.jwtService.verifyAsync(
                     token,
                     {
                         secret: config().SERVER.JWT_KEY
