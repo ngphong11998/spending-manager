@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IGroupUser } from "src/modules/groupUser/entities/group-user.entity";
+import { IGroupUser } from "src/modules/group-user/entities/group-user.entity";
 
 const GroupUserSchema = new mongoose.Schema<IGroupUser>(
     {
