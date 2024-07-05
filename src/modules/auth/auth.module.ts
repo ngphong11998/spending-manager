@@ -3,13 +3,21 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import config from 'src/commons/configs/app.config'
+import { MongooseModule } from '@nestjs/mongoose';
+import { mapSchemasWithModelName } from 'src/shares/schemas';
+import { MODEL_NAME } from 'src/commons/constants';
 
 @Module({
-    imports: [JwtModule.register({
-        global: true,
-        secret: config().SERVER.INTERNAL_SECRET_KEY,
-        signOptions: { expiresIn: config().SERVER.EXPIRE_TIME_TOKEN },
-    }),],
+    imports: [
+        JwtModule.register({
+            global: true,
+            secret: config().SERVER.JWT_KEY,
+            signOptions: { expiresIn: '5s' },//config().SERVER.EXPIRE_TIME_TOKEN
+        }),
+        MongooseModule.forFeatureAsync(
+            mapSchemasWithModelName([MODEL_NAME.USER])
+        )
+    ],
     controllers: [AuthController],
     providers: [AuthService],
 })

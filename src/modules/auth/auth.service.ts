@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { ACTIVE_STATUS, MODEL_NAME } from 'src/commons/constants';
 import { IUser } from '../user/entities/user.entity';
 import { LoginDto, ResponseLoginDto } from './dtos/login.dto';
-import { encryptString } from 'src/shares/utils';
+import { comparePassword} from 'src/shares/utils';
 
 @Injectable()
 export class AuthService {
@@ -20,15 +20,15 @@ export class AuthService {
         if (!user) {
             throw new Error('User not found')
         }
-        if(encryptString(password) !== user.password){
+        
+        if (!comparePassword(password, user.password)) {
             throw new Error('Password incorrect')
         }
         const dataPayload = {
             userId: user._id,
-            userCode: user.code,
             email: user.email
         }
-        return { 
+        return {
             access_token: this.jwtService.sign(dataPayload)
         }
     }

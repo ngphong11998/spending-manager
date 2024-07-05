@@ -3,7 +3,6 @@ import { ACTIVE_STATUS, USER_TYPE } from "src/commons/constants";
 import { IBaseEntity } from "src/shares/interfaces";
 
 export interface IUser extends IBaseEntity{
-    code: string;
     type: USER_TYPE;
     fullname?: string;
     email: string;

@@ -13,7 +13,7 @@ import { MODEL_NAME } from 'src/commons/constants/database.constant';
             ])
         )
     ],
-  controllers: [UserController],
-  providers: [UserService],
+    controllers: [UserController],
+    providers: [UserService],
 })
-export class UserModule {}
+export class UserModule { }

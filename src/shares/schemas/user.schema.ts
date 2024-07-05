@@ -4,7 +4,6 @@ import { IUser } from "src/modules/user/entities/user.entity";
 
 const UserSchema = new mongoose.Schema<IUser>(
     {
-        code: { type: String, unique: true, require: true },
         type: { type: String, enum: USER_TYPE, default: USER_TYPE.USER },
         fullname: { type: String },
         email: { type: String, require: true, unique: true },

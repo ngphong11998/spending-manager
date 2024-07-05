@@ -1,15 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Put, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Put, Query, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Response } from 'express';
+import { errorResponse, successResponse } from 'src/shares/utils';
 
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
     @Post('create')
-    async create(@Req() req: Request, @Body() createUserDto: CreateUserDto) {
-        return await this.userService.create(createUserDto);
+    async create(@Req() req: Request, @Res() res: Response, @Body() body: CreateUserDto) {
+        try {
+            const data = await this.userService.create(body)
+            return successResponse(res, data)
+        } catch (err) {
+            return errorResponse(res, err)
+        }
+
     }
 
     @Get('list')
@@ -18,8 +26,14 @@ export class UserController {
     }
 
     @Get('detail/:id')
-    async findOne(@Req() req: Request, @Param('id') id: string) {
-        return await this.userService.findOne(id);
+    async findOne(@Req() req: Request, @Res() res: Response, @Param('id') id: string) {
+        try {
+            const data = await this.userService.findOne(id);
+            return successResponse(res, data)
+        } catch (err) {
+            return errorResponse(res, err)
+        }
+
     }
 
     @Put('update/:id')

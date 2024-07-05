@@ -4,6 +4,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import configuration from 'src/commons/configs/app.config'
 import { mapSchemasWithModelName } from './shares/schemas';
 import { MODEL_NAME } from './commons/constants/database.constant';
+import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { GroupUserModule } from './modules/group-user/group-user.module';
+import { TransactionModule } from './modules/transaction/transaction.module';
+import { JwtAuthGuard } from './cores/guards';
 
 @Module({
     imports: [
@@ -45,9 +50,18 @@ import { MODEL_NAME } from './commons/constants/database.constant';
         }),
         MongooseModule.forFeatureAsync(
             mapSchemasWithModelName(Object.values(MODEL_NAME))
-        )
+        ),
+        UserModule,
+        AuthModule,
+        GroupUserModule,
+        TransactionModule
     ],
     controllers: [],
-    providers: [],
+    providers: [
+        {
+            provide: 'APP_GUARD',
+            useClass: JwtAuthGuard
+        }
+    ],
 })
 export class AppModule { }
