@@ -1,2 +1,2 @@
-export * from './baseEntity.interface'
-export * from './reqUser.interface'
+export * from './base-entity.interface'
+export * from './req-user.interface'
